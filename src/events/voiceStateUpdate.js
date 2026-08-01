@@ -215,6 +215,13 @@ userLimit: userLimit === 0 ? undefined : userLimit,
                 });
 
                 await registerTemporaryChannel(client, guild.id, tempChannel.id, member.id, triggerChannel.id);
+                try {
+    await tempChannel.send({
+        content: `👋 Welcome ${member}!\nThis is your private voice room.`
+    });
+} catch (err) {
+    console.error("Unable to send message in voice chat:", err);
+}
 
                 if (member.voice?.channel?.id === triggerChannel.id) {
                     await member.voice.setChannel(tempChannel);
