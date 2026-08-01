@@ -246,7 +246,7 @@ Use the buttons below to manage your room.
 > 👥 User Limit
 > 👑 Claim Ownership
 
-Enjoy your stay! 💙`
+Enjoy your stay! `
             )
             .setFooter({
                 text: "Voice Manager",
