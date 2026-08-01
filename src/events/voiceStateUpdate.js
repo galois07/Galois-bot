@@ -215,6 +215,26 @@ userLimit: userLimit === 0 ? undefined : userLimit,
                 });
 
                 await registerTemporaryChannel(client, guild.id, tempChannel.id, member.id, triggerChannel.id);
+                // Create a private text channel for the VC owner
+const textChannel = await guild.channels.create({
+    name: `💬-${member.user.username}`,
+    type: ChannelType.GuildText,
+    parent: triggerChannel.parentId,
+    permissionOverwrites: [
+        {
+            id: guild.id,
+            deny: ['ViewChannel']
+        },
+        {
+            id: member.id,
+            allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory']
+        },
+        {
+            id: guild.members.me.id,
+            allow: ['ViewChannel', 'SendMessages']
+        }
+    ]
+});
 
                 if (member.voice?.channel?.id === triggerChannel.id) {
                     await member.voice.setChannel(tempChannel);
