@@ -260,9 +260,30 @@ Enjoy your stay! `
                 iconURL: guild.iconURL({ dynamic: true })
             });
 
-        await tempChannel.send({
-            embeds: [embed]
-        });
+        const row = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+        .setCustomId("vc_lock")
+        .setLabel("Lock")
+        .setEmoji("🔒")
+        .setStyle(ButtonStyle.Secondary),
+
+    new ButtonBuilder()
+        .setCustomId("vc_unlock")
+        .setLabel("Unlock")
+        .setEmoji("🔓")
+        .setStyle(ButtonStyle.Secondary),
+
+    new ButtonBuilder()
+        .setCustomId("vc_rename")
+        .setLabel("Rename")
+        .setEmoji("✏️")
+        .setStyle(ButtonStyle.Primary)
+);
+
+await tempChannel.send({
+    embeds: [embed],
+    components: [row]
+});
 
     } catch (err) {
         console.error(err);
