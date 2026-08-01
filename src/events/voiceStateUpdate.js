@@ -1,4 +1,4 @@
-import { ChannelType, PermissionFlagsBits } from 'discord.js';
+import { ChannelType, PermissionFlagsBits, EmbedBuilder } from 'discord.js';
 import {
     getJoinToCreateConfig, 
     registerTemporaryChannel, 
@@ -216,9 +216,36 @@ userLimit: userLimit === 0 ? undefined : userLimit,
 
                 await registerTemporaryChannel(client, guild.id, tempChannel.id, member.id, triggerChannel.id);
                 try {
-    await tempChannel.send({
-        content: `👋 Welcome ${member}!\nThis is your private voice room.`
+    const embed = new EmbedBuilder()
+    .setColor("#2B2D31")
+    .setAuthor({
+        name: `${guild.name} • Voice Controls`,
+        iconURL: guild.iconURL({ dynamic: true })
+    })
+    .setTitle("🎙️ Your Private Voice Room")
+    .setDescription(
+`Welcome ${member}!
+
+You are now the owner of this voice channel.
+
+Use the buttons below to customize and manage your room.
+
+> 🔒 Lock or unlock your room
+> 👁️ Hide or unhide it
+> ✏️ Rename it
+> 👥 Change the user limit
+> 👑 Claim ownership if needed
+
+Enjoy your stay! 💙`
+    )
+    .setFooter({
+        text: "Voice Manager",
+        iconURL: guild.iconURL({ dynamic: true })
     });
+
+await tempChannel.send({
+    embeds: [embed]
+});
 } catch (err) {
     console.error("Unable to send message in voice chat:", err);
 }
