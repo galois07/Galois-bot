@@ -215,46 +215,57 @@ userLimit: userLimit === 0 ? undefined : userLimit,
                 });
 
                 await registerTemporaryChannel(client, guild.id, tempChannel.id, member.id, triggerChannel.id);
-                try {
-    const embed = new EmbedBuilder()
-    .setColor("#2B2D31")
-    .setAuthor({
-        name: `${guild.name} • Voice Controls`,
-        iconURL: guild.iconURL({ dynamic: true })
-    })
-    .setTitle("🎙️ Your Private Voice Room")
-    .setDescription(
+
+// Move the member first
+if (member.voice?.channel?.id === triggerChannel.id) {
+
+    await member.voice.setChannel(tempChannel);
+
+    // Wait 1 second so the voice chat is fully initialized
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    try {
+
+        const embed = new EmbedBuilder()
+            .setColor("#2B2D31")
+            .setAuthor({
+                name: `${guild.name} • Voice Controls`,
+                iconURL: guild.iconURL({ dynamic: true })
+            })
+            .setTitle("🎙️ Your Private Voice Room")
+            .setDescription(
 `Welcome ${member}!
 
 You are now the owner of this voice channel.
 
-Use the buttons below to customize and manage your room.
+Use the buttons below to manage your room.
 
-> 🔒 Lock or unlock your room
-> 👁️ Hide or unhide it
-> ✏️ Rename it
-> 👥 Change the user limit
-> 👑 Claim ownership if needed
+> 🔒 Lock / Unlock
+> 👁️ Hide / Unhide
+> ✏️ Rename
+> 👥 User Limit
+> 👑 Claim Ownership
 
 Enjoy your stay! 💙`
-    )
-    .setFooter({
-        text: "Voice Manager",
-        iconURL: guild.iconURL({ dynamic: true })
-    });
+            )
+            .setFooter({
+                text: "Voice Manager",
+                iconURL: guild.iconURL({ dynamic: true })
+            });
 
-await tempChannel.send({
-    embeds: [embed]
-});
-} catch (err) {
-    console.error("Unable to send message in voice chat:", err);
+        await tempChannel.send({
+            embeds: [embed]
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+
+} else {
+
+    logger.debug(`Skipped moving ${member.id} to temporary channel ${tempChannel.id} because voice state changed`);
+
 }
-
-                if (member.voice?.channel?.id === triggerChannel.id) {
-                    await member.voice.setChannel(tempChannel);
-                } else {
-                    logger.debug(`Skipped moving ${member.id} to temporary channel ${tempChannel.id} because voice state changed`);
-                }
 
                 logger.info(`Created temporary voice channel ${tempChannel.name} (${tempChannel.id}) for user ${member.user.tag} in guild ${guild.name} with user limit ${userLimit}`);
 
