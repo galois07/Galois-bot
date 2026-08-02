@@ -1,26 +1,13 @@
-
 import { MessageFlags } from "discord.js";
 
 const lockHandler = {
     name: "voice_lock",
     async execute(interaction) {
 
-        const channel = interaction.member.voice.channel;
-
-        if (!channel)
-            return interaction.reply({
-                content: "❌ Join your voice channel first.",
-                flags: MessageFlags.Ephemeral
-            });
-
-        const everyone = interaction.guild.roles.everyone;
-
-        await channel.permissionOverwrites.edit(everyone, {
-            Connect: false
-        });
+        console.log("VOICE LOCK CLICKED");
 
         await interaction.reply({
-            content: "🔒 Voice locked.",
+            content: "✅ Le bouton fonctionne !",
             flags: MessageFlags.Ephemeral
         });
     }
@@ -30,22 +17,10 @@ const unlockHandler = {
     name: "voice_unlock",
     async execute(interaction) {
 
-        const channel = interaction.member.voice.channel;
-
-        if (!channel)
-            return interaction.reply({
-                content: "❌ Join your voice channel first.",
-                flags: MessageFlags.Ephemeral
-            });
-
-        const everyone = interaction.guild.roles.everyone;
-
-        await channel.permissionOverwrites.edit(everyone, {
-            Connect: true
-        });
+        console.log("VOICE UNLOCK CLICKED");
 
         await interaction.reply({
-            content: "🔓 Voice unlocked.",
+            content: "✅ Unlock fonctionne !",
             flags: MessageFlags.Ephemeral
         });
     }
